@@ -23,6 +23,7 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
+import kotlin.math.pow
 
 class MainActivity : ComponentActivity() {
     override fun onCreate(savedInstanceState: Bundle?) {
@@ -34,10 +35,6 @@ class MainActivity : ComponentActivity() {
     }
 }
 
-// 1 TextField
-// 2 TextField
-// + - * / Buttons
-// Result TextField
 @Composable
 fun CalculatorExampleApp(modifier: Modifier = Modifier){
     val firstValue = remember { mutableStateOf("") }
@@ -76,64 +73,97 @@ fun CalculatorExampleApp(modifier: Modifier = Modifier){
             label = { Text("Enter second value") }
         )
 
-        Row (
+        Spacer(modifier.size(16.dp))
+        Column(
             modifier = Modifier.fillMaxWidth(),
-            horizontalArrangement = Arrangement.SpaceEvenly
-        ){
-            Button(
-                onClick = {
-                    if (firstValue.value.toDoubleOrNull() != null && secondValue.value.toDoubleOrNull() != null)
-                        result.value = (firstValue.value.toDouble() + secondValue.value.toDouble()).toString()
-                    else
-                        result.value = "Type Number"
-                }
+            verticalArrangement = Arrangement.SpaceAround
+        ) {
+            Row (
+                modifier = Modifier.fillMaxWidth(),
+                horizontalArrangement = Arrangement.SpaceEvenly
             ) {
-                Text("+")
+                Button(
+                    onClick = {
+                        if (firstValue.value.toDoubleOrNull() != null && secondValue.value.toDoubleOrNull() != null)
+                            result.value =
+                                (firstValue.value.toDouble() + secondValue.value.toDouble()).toString()
+                        else
+                            result.value = "Type Number"
+                    }
+                ) {
+                    Text("+")
+                }
+                Button(
+                    onClick = {
+                        if (firstValue.value.toDoubleOrNull() != null && secondValue.value.toDoubleOrNull() != null)
+                            result.value =
+                                (firstValue.value.toDouble() - secondValue.value.toDouble()).toString()
+                        else
+                            result.value = "Type Number"
+                    }
+                ) {
+                    Text("-")
+                }
+                Button(
+                    onClick = {
+                        if (firstValue.value.toDoubleOrNull() != null && secondValue.value.toDoubleOrNull() != null)
+                            result.value =
+                                (firstValue.value.toDouble() * secondValue.value.toDouble()).toString()
+                        else
+                            result.value = "Type Number"
+                    }
+                ) {
+                    Text("*")
+                }
+                Button(
+                    onClick = {
+                        if (firstValue.value.toDoubleOrNull() != null && secondValue.value.toDoubleOrNull() != null)
+                            result.value =
+                                if (secondValue.value.toInt() != 0) {
+                                    (firstValue.value.toDouble() / secondValue.value.toDouble()).toString()
+                                } else {
+                                    "Can't be divided to 0"
+                                }
+                        else
+                            result.value = "Type Number"
+                    }
+                ) {
+                    Text("/")
+                }
             }
-            Button(
-                onClick = {
-                    if (firstValue.value.toDoubleOrNull() != null && secondValue.value.toDoubleOrNull() != null)
-                        result.value = (firstValue.value.toDouble() - secondValue.value.toDouble()).toString()
-                    else
-                        result.value = "Type Number"
+            Row (
+                    modifier = Modifier.fillMaxWidth(),
+                    horizontalArrangement = Arrangement.SpaceEvenly
+            ){
+                Button(
+                    onClick = {
+                        if (firstValue.value.toDoubleOrNull() != null && secondValue.value.toDoubleOrNull() != null)
+                            result.value = (firstValue.value.toDouble() * (secondValue.value.toDouble() / 100)).toString()
+                        else
+                            result.value = "Type Number"
+                    }
+                ) {
+                    Text("%")
                 }
-            ) {
-                Text("-")
-            }
-            Button(
-                onClick = {
-                    if (firstValue.value.toDoubleOrNull() != null && secondValue.value.toDoubleOrNull() != null)
-                        result.value = (firstValue.value.toDouble() * secondValue.value.toDouble()).toString()
-                    else
-                        result.value = "Type Number"
+                Button(
+                    onClick = {
+                        if (firstValue.value.toDoubleOrNull() != null && secondValue.value.toDoubleOrNull() != null)
+                            result.value = firstValue.value.toDouble().pow(secondValue.value.toDouble()).toString()
+                        else
+                            result.value = "Type Number"
+                    }
+                ) {
+                    Text("^")
                 }
-            ) {
-                Text("*")
-            }
-            Button(
-                onClick = {
-                    if (firstValue.value.toDoubleOrNull() != null && secondValue.value.toDoubleOrNull() != null)
-                        result.value =
-                            if (secondValue.value.toInt()!=0) {
-                                (firstValue.value.toDouble() / secondValue.value.toDouble()).toString()
-                            } else {
-                                "Can't be divided to 0"
-                            }
-                    else
-                        result.value = "Type Number"
+                Button(
+                    onClick = {
+                        firstValue.value = ""
+                        secondValue.value = ""
+                        result.value = ""
+                    }
+                ) {
+                    Text("C")
                 }
-            ) {
-                Text("/")
-            }
-            Button(
-                onClick = {
-                    if (firstValue.value.toDoubleOrNull() != null && secondValue.value.toDoubleOrNull() != null)
-                        result.value = (firstValue.value.toDouble() * (secondValue.value.toDouble() / 100)).toString()
-                    else
-                        result.value = "Type Number"
-                }
-            ) {
-                Text("%")
             }
         }
     }
